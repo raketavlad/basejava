@@ -14,15 +14,19 @@ public class MainArray {
         Resume r;
         while (true) {
             System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
+            // Возврат строки, убираются пробелы пробелы сзади и спереди, к нижнему регистру, разбивка на эелементы
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
+            // Проверка, что введена правильная длинна команд (от одного слова до двух)
             if (params.length < 1 || params.length > 2) {
                 System.out.println("Неверная команда.");
                 continue;
             }
             String uuid = null;
+            // Метод intern смотрит, есть ли введенный uuid в пуле строк и возвращает его, если его нет - создает
             if (params.length == 2) {
                 uuid = params[1].intern();
             }
+            //  В свиче проверяю первое введённое слово и выполняю соответствующее действие
             switch (params[0]) {
                 case "list":
                     printAll();
