@@ -36,9 +36,8 @@ public class ArrayStorage {
         if (position == -1) {
             return;
         }
-        int length = storage.length;
-        if (position != length - 1) {
-            System.arraycopy(storage, position + 1, storage, position, length - position - 1);
+        if (position != storage.length - 1) {
+            storage[position] = storage[size - 1];
         } else {
             storage[position] = null;
         }
