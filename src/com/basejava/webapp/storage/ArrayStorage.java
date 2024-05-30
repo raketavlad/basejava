@@ -8,7 +8,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
@@ -17,40 +18,35 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        int position = findPosition(resume.getUuid());
+        int index = findIndex(resume.getUuid());
         if (size == storage.length) {
             System.out.println("ERROR: Хранилище переполнено");
-            return;
-        }
-        if (position == -1) {
+        } else if (index != -1) {
+            System.out.println("ERROR: Такое резюме уже есть в хранилище!");
+        } else {
             storage[size] = resume;
             size++;
-        } else {
-            System.out.println("ERROR: Такое резюме уже есть в хранилище!");
         }
     }
 
     public Resume get(String uuid) {
-        int position = findPosition(uuid);
-        if (position == -1) {
+        int index = findIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
             return null;
         } else {
-            return storage[position];
+            return storage[index];
         }
     }
 
     public void delete(String uuid) {
-        int position = findPosition(uuid);
-        if (position == -1) {
+        int index = findIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
             return;
         }
-        if (position != storage.length - 1) {
-            storage[position] = storage[size - 1];
-        } else {
-            storage[position] = null;
-        }
+        storage[index] = storage[size - 1];
+        storage[size - 1] = null;
         size--;
     }
 
@@ -67,15 +63,15 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        int position = findPosition(uuid);
-        if (position == -1) {
+        int index = findIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
         } else {
-            storage[position] = resume;
+            storage[index] = resume;
         }
     }
 
-    private int findPosition(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
