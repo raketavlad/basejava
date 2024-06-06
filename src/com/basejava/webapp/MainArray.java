@@ -18,7 +18,7 @@ public class MainArray {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume resume;
         while (true) {
-            System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | update uuid | clear | exit): ");
             // Возврат строки, убираются пробелы пробелы сзади и спереди, к нижнему регистру, разбивка на эелементы
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             // Проверка, что введена правильная длинна команд (от одного слова до двух)
@@ -37,12 +37,18 @@ public class MainArray {
                     printAll();
                     break;
                 case "size":
-                    System.out.println(ARRAY_STORAGE.getSize());
+                    System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
                     resume = new Resume();
                     resume.setUuid(uuid);
                     ARRAY_STORAGE.save(resume);
+                    printAll();
+                    break;
+                case "update":
+                    resume = new Resume();
+                    resume.setUuid(uuid);
+                    ARRAY_STORAGE.update(resume);
                     printAll();
                     break;
                 case "delete":

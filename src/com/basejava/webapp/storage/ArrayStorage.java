@@ -7,21 +7,27 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    private static final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    public void update(Resume resume) {
+        String uuid = resume.getUuid();
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
+        } else {
+            storage[index] = resume;
+        }
+    }
+
     public void save(Resume resume) {
-        int index = findIndex(resume.getUuid());
-        if (size == storage.length) {
+        if (size == STORAGE_LIMIT) {
             System.out.println("ERROR: Хранилище переполнено");
-        } else if (index != -1) {
+        } else if (getIndex(resume.getUuid()) != -1) {
             System.out.println("ERROR: Такое резюме уже есть в хранилище!");
         } else {
             storage[size] = resume;
@@ -29,18 +35,8 @@ public class ArrayStorage {
         }
     }
 
-    public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index == -1) {
-            System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
-            return null;
-        } else {
-            return storage[index];
-        }
-    }
-
     public void delete(String uuid) {
-        int index = findIndex(uuid);
+        int index = getIndex(uuid);
         if (index == -1) {
             System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
             return;
@@ -50,28 +46,11 @@ public class ArrayStorage {
         size--;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        if (index == -1) {
-            System.out.println("ERROR: Резюме с uuid '" + uuid + "' отсутствует в хранилище!");
-        } else {
-            storage[index] = resume;
-        }
-    }
-
-    private int findIndex(String uuid) {
+    protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
