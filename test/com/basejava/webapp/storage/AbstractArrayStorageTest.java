@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public abstract class AbstractArrayStorageTest {
 
-    private Storage storage;
+    private final Storage storage;
 
     public static final String UUID_1 = "uuid1";
     public static final Resume RESUME_1 = new Resume(UUID_1);
@@ -20,6 +20,7 @@ public abstract class AbstractArrayStorageTest {
     public static final Resume RESUME_3 = new Resume(UUID_3);
     public static final String UUID_4 = "uuid4";
     public static final Resume RESUME_4 = new Resume(UUID_4);
+    public static final String TEST_UUID = "dummy";
 
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -36,38 +37,38 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        Assertions.assertTrue(assertSize(0));
+        assertSize(0);
         ArrayStorage emptyArrayStorage = new ArrayStorage();
         Assertions.assertArrayEquals(storage.getAll(), emptyArrayStorage.getAll());
     }
 
     @Test
     public void update() {
-        Resume firstResume = storage.get("uuid1");
-        storage.update(new Resume("uuid1"));
-        Resume secondResume = storage.get("uuid1");
+        Resume firstResume = storage.get(UUID_1);
+        storage.update(new Resume(UUID_1));
+        Resume secondResume = storage.get(UUID_1);
         Assertions.assertNotSame(firstResume, secondResume);
     }
 
     @Test
     public void save() {
         storage.save(RESUME_4);
-        Assertions.assertTrue(assertGet(RESUME_4));
-        Assertions.assertTrue(assertSize(4));
+        assertGet(RESUME_4);
+        assertSize(4);
     }
 
     @Test
     public void get() {
-        Assertions.assertTrue(assertGet(RESUME_1));
-        Assertions.assertTrue(assertGet(RESUME_2));
-        Assertions.assertTrue(assertGet(RESUME_3));
+        assertGet(RESUME_1);
+        assertGet(RESUME_2);
+        assertGet(RESUME_3);
     }
 
     @Test
     public void delete() {
         Assertions.assertEquals(RESUME_1, storage.get(RESUME_1.getUuid()));
         storage.delete(RESUME_1.getUuid());
-        Assertions.assertTrue(assertSize(2));
+        assertSize(2);
         Assertions.assertThrows(NotExistStorageException.class, () -> {
             storage.get(RESUME_1.getUuid());
         });
@@ -80,7 +81,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void size() {
-        Assertions.assertTrue(assertSize(3));
+        assertSize(3);
     }
 
     @Test
@@ -114,22 +115,22 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void getNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.get("dummy");
+            storage.get(TEST_UUID);
         });
     }
 
     @Test
     public void deleteNotExist() {
         Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.delete("dummy");
+            storage.delete(TEST_UUID);
         });
     }
 
-    private boolean assertSize(int size) {
-        return size == storage.size();
+    private void assertSize(int size) {
+        Assertions.assertEquals(size, storage.size());
     }
 
-    private boolean assertGet(Resume resume) {
-        return resume.equals(storage.get(resume.getUuid()));
+    private void assertGet(Resume resume) {
+        Assertions.assertEquals(resume, storage.get(resume.getUuid()));
     }
 }
