@@ -1,7 +1,5 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Collections;
@@ -11,50 +9,6 @@ import java.util.List;
 public class ListStorage extends AbstractStorage {
 
     private List<Resume> storage = new LinkedList<Resume>();
-
-    @Override
-    public void clear() {
-        clearStorage();
-    }
-
-    @Override
-    public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            updateResume(index, resume);
-        }
-    }
-
-    @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            saveResume(resume, index);
-        }
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getResume(index);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteResume(index);
-    }
 
     @Override
     public Resume[] getAll() {
@@ -91,6 +45,7 @@ public class ListStorage extends AbstractStorage {
         storage.remove(index);
     }
 
+    @Override
     protected int getIndex(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Collections.binarySearch(storage, searchKey);

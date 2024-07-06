@@ -25,6 +25,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
+    @Override
     protected void clearStorage() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -35,14 +36,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         storage[index] = resume;
     }
 
-    protected abstract void saveResume(Resume resume, int index);
-
     @Override
     protected Resume getResume(int index) {
         return storage[index];
     }
-
-    protected abstract int getIndex(String uuid);
 
     @Override
     protected void storageOverflow(Resume resume) {

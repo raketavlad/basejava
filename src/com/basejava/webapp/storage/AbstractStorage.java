@@ -53,11 +53,6 @@ public abstract class AbstractStorage implements Storage {
         deleteResume(index);
     }
 
-    @Override
-    public Resume[] getAll() {
-        return null;
-    }
-
     protected abstract void clearStorage();
 
     protected abstract void updateResume(int index, Resume resume);
