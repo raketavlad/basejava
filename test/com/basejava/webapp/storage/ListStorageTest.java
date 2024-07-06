@@ -95,10 +95,6 @@ class ListStorageTest {
     }
 
     @Test
-    public void saveOverFlow() {
-    }
-
-    @Test
     public void saveExist() {
         Assertions.assertThrows(ExistStorageException.class, () -> {
             storage.save(RESUME_1);

@@ -15,7 +15,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         clearStorage();
-        size = 0;
     }
 
     @Override
@@ -36,7 +35,6 @@ public class ListStorage extends AbstractStorage {
             throw new ExistStorageException(resume.getUuid());
         } else {
             saveResume(resume, index);
-            size++;
         }
     }
 
@@ -56,7 +54,6 @@ public class ListStorage extends AbstractStorage {
             throw new NotExistStorageException(uuid);
         }
         deleteResume(index);
-        size--;
     }
 
     @Override
@@ -66,12 +63,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public int size() {
-        return size;
-    }
-
-    @Override
-    protected void storageOverflow(int size, Resume resume) {
-
+        return storage.size();
     }
 
     @Override
@@ -85,13 +77,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getResume(int index) {
-        return storage.get(index);
+    protected void saveResume(Resume resume, int index) {
+        storage.add(-index - 1, resume);
     }
 
     @Override
-    protected void saveResume(Resume resume, int index) {
-        storage.add(-index - 1, resume);
+    protected Resume getResume(int index) {
+        return storage.get(index);
     }
 
     @Override
@@ -103,4 +95,7 @@ public class ListStorage extends AbstractStorage {
         Resume searchKey = new Resume(uuid);
         return Collections.binarySearch(storage, searchKey);
     }
+
+    @Override
+    protected void storageOverflow(Resume resume) {}
 }

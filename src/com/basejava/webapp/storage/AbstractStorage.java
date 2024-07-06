@@ -5,13 +5,12 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
+
     protected Storage storage;
-    protected int size = 0;
 
     @Override
     public void clear() {
         clearStorage();
-        size = 0;
     }
 
     @Override
@@ -28,12 +27,11 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
-        storageOverflow(size, resume);
+        storageOverflow(resume);
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         } else {
             saveResume(resume, index);
-            size++;
         }
     }
 
@@ -53,7 +51,6 @@ public abstract class AbstractStorage implements Storage {
             throw new NotExistStorageException(uuid);
         }
         deleteResume(index);
-        size--;
     }
 
     @Override
@@ -61,22 +58,17 @@ public abstract class AbstractStorage implements Storage {
         return null;
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    protected abstract void storageOverflow(int size, Resume resume);
-
     protected abstract void clearStorage();
 
     protected abstract void updateResume(int index, Resume resume);
 
-    protected abstract Resume getResume(int index);
-
     protected abstract void saveResume(Resume resume, int index);
+
+    protected abstract Resume getResume(int index);
 
     protected abstract void deleteResume(int index);
 
     protected abstract int getIndex(String uuid);
+
+    protected abstract void storageOverflow(Resume resume);
 }
