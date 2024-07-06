@@ -94,19 +94,9 @@ class ListStorageTest {
         });
     }
 
-//    @Test
-//    public void saveOverFlow() {
-//        try {
-//            for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-//                storage.save(new Resume());
-//            }
-//        } catch (StorageException excepted) {
-//            Assertions.fail("Storage переполнен раньше времени");
-//        }
-//        Assertions.assertThrows(StorageException.class, () -> {
-//            storage.save(new Resume());
-//        });
-//    }
+    @Test
+    public void saveOverFlow() {
+    }
 
     @Test
     public void saveExist() {

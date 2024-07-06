@@ -9,12 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
+
     private List<Resume> storage = new LinkedList<Resume>();
-    private int size = 0;
 
     @Override
     public void clear() {
-        storage.clear();
+        clearStorage();
         size = 0;
     }
 
@@ -25,7 +25,7 @@ public class ListStorage extends AbstractStorage {
         if (index < 0) {
             throw new NotExistStorageException(resume.getUuid());
         } else {
-            storage.set(index, resume);
+            updateResume(index, resume);
         }
     }
 
@@ -35,7 +35,7 @@ public class ListStorage extends AbstractStorage {
         if (index >= 0) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            storage.add(-index - 1, resume);
+            saveResume(resume, index);
             size++;
         }
     }
@@ -46,7 +46,7 @@ public class ListStorage extends AbstractStorage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return storage.get(index);
+        return getResume(index);
     }
 
     @Override
@@ -55,19 +55,48 @@ public class ListStorage extends AbstractStorage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        storage.remove(index);
+        deleteResume(index);
         size--;
     }
 
     @Override
     public Resume[] getAll() {
-        Resume[] storage1 = storage.toArray(Resume[]::new);
-        return storage1;
+        return storage.toArray(Resume[]::new);
     }
 
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    protected void storageOverflow(int size, Resume resume) {
+
+    }
+
+    @Override
+    protected void clearStorage() {
+        storage.clear();
+    }
+
+    @Override
+    protected void updateResume(int index, Resume resume) {
+        storage.set(index, resume);
+    }
+
+    @Override
+    protected Resume getResume(int index) {
+        return storage.get(index);
+    }
+
+    @Override
+    protected void saveResume(Resume resume, int index) {
+        storage.add(-index - 1, resume);
+    }
+
+    @Override
+    protected void deleteResume(int index) {
+        storage.remove(index);
     }
 
     protected int getIndex(String uuid) {
