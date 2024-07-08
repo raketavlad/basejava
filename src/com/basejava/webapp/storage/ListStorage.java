@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
-    private List<Resume> storage = new LinkedList<Resume>();
+    private List<Resume> storage = new LinkedList<>();
 
     @Override
     public Resume[] getAll() {
@@ -21,36 +21,41 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void clearStorage() {
+    public void clear() {
         storage.clear();
     }
 
     @Override
-    protected void updateResume(int index, Resume resume) {
+    protected void doUpdate(Resume resume, int index) {
         storage.set(index, resume);
     }
 
     @Override
-    protected void saveResume(Resume resume, int index) {
+    protected void doSave(Resume resume, int index) {
         storage.add(-index - 1, resume);
     }
 
     @Override
-    protected Resume getResume(int index) {
+    protected Resume doGet(int index) {
         return storage.get(index);
     }
 
     @Override
-    protected void deleteResume(int index) {
+    protected void doDelete(int index) {
         storage.remove(index);
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Object getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Collections.binarySearch(storage, searchKey);
     }
 
     @Override
-    protected void storageOverflow(Resume resume) {}
+    protected boolean isExist(Object searchKey) {
+        if ((int) searchKey < 0) {
+            return false;
+        }
+        return true;
+    }
 }
