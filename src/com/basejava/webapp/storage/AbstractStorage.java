@@ -6,35 +6,32 @@ import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected Storage storage;
-    protected Object searchKey;
-
     @Override
     public final void update(Resume resume) {
-        searchKey = getNotExistingSearchKey(resume.getUuid());
+        Object searchKey = getNotExistingSearchKey(resume.getUuid());
         doUpdate(resume, (int) searchKey);
     }
 
     @Override
     public final void save(Resume resume) {
-        searchKey = getExistingSearchKey(resume.getUuid());
+        Object searchKey = getExistingSearchKey(resume.getUuid());
         doSave(resume, (int) searchKey);
     }
 
     @Override
     public final Resume get(String uuid) {
-        searchKey = getNotExistingSearchKey(uuid);
+        Object searchKey = getNotExistingSearchKey(uuid);
         return doGet((int) searchKey);
     }
 
     @Override
     public final void delete(String uuid) {
-        searchKey = getNotExistingSearchKey(uuid);
+        Object searchKey = getNotExistingSearchKey(uuid);
         doDelete((int) searchKey);
     }
 
     private int getExistingSearchKey(String uuid) {
-        searchKey = getSearchKey(uuid);
+        Object searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             return (int) searchKey;
         }
@@ -42,7 +39,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private int getNotExistingSearchKey(String uuid) {
-        searchKey = getSearchKey(uuid);
+        Object searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             return (int) searchKey;
         }

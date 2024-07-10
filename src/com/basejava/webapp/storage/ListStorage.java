@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
-    private List<Resume> storage = new LinkedList<>();
+    private final List<Resume> storage = new LinkedList<>();
 
     @Override
     public Resume[] getAll() {
@@ -53,9 +53,6 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        if ((int) searchKey < 0) {
-            return false;
-        }
-        return true;
+        return (int) searchKey >= 0;
     }
 }
