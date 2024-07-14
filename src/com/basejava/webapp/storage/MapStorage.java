@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class LinkedHashMapStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage {
 
     private final LinkedHashMap<Integer, Resume> storage = new LinkedHashMap<>();
 
