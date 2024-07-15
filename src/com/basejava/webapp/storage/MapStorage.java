@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 
 public class MapStorage extends AbstractStorage {
 
-    private final LinkedHashMap<Integer, Resume> storage = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public Resume[] getAll() {
@@ -27,38 +27,32 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-        int hashcode = (int) searchKey;
-        storage.replace(hashcode, resume);
+        storage.replace((String) searchKey, resume);
     }
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        storage.put(resume.hashCode(), resume);
+        storage.put((String) searchKey, resume);
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        int hashcode = (int) searchKey;
-        return storage.get(hashcode);
+        return storage.get((String) searchKey);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        int hashcode = (int) searchKey;
-        storage.remove(hashcode);
+        storage.remove((String) searchKey);
     }
 
     @Override
     protected Object getSearchKey(String uuid) {
-        if (storage.containsKey(uuid.hashCode())) {
-            return uuid.hashCode();
-        }
-        return -1;
+        return uuid;
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+        return storage.containsKey(searchKey);
     }
 
 }
