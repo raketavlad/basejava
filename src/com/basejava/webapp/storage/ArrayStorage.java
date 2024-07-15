@@ -8,14 +8,15 @@ import com.basejava.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void doSave(Resume resume, int index) {
+    protected void doSave(Resume resume, Object searchKey) {
         storageOverflow(resume);
         storage[size] = resume;
         size++;
     }
 
     @Override
-    protected void doDelete(int index) {
+    protected void doDelete(Object searchKey) {
+        int index = (int) searchKey;
         storage[index] = storage[size - 1];
         storage[size - 1] = null;
         size--;

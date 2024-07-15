@@ -26,23 +26,26 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Resume resume, int hashcode) {
+    protected void doUpdate(Resume resume, Object searchKey) {
+        int hashcode = (int) searchKey;
         storage.replace(hashcode, resume);
     }
 
     @Override
-    protected void doSave(Resume resume, int index) {
+    protected void doSave(Resume resume, Object searchKey) {
         storage.put(resume.hashCode(), resume);
     }
 
     @Override
-    protected Resume doGet(int hashcode) {
+    protected Resume doGet(Object searchKey) {
+        int hashcode = (int) searchKey;
         return storage.get(hashcode);
     }
 
     @Override
-    protected void doDelete(int index) {
-        storage.remove(index);
+    protected void doDelete(Object searchKey) {
+        int hashcode = (int) searchKey;
+        storage.remove(hashcode);
     }
 
     @Override

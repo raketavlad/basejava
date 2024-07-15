@@ -32,13 +32,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Resume resume, int searchKey) {
-        storage[searchKey] = resume;
+    protected void doUpdate(Resume resume, Object searchKey) {
+        storage[(int) searchKey] = resume;
     }
 
     @Override
-    protected Resume doGet(int searchKey) {
-        return storage[searchKey];
+    protected Resume doGet(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     protected void storageOverflow(Resume resume) {
