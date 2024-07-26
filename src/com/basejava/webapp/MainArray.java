@@ -7,6 +7,7 @@ import com.basejava.webapp.storage.Storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Interactive test for com.basejava.webapp.storage.ArrayStorage implementation
@@ -27,10 +28,10 @@ public class MainArray {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String uuid = null;
+            String fullName = null;
             // Метод intern смотрит, есть ли введенный uuid в пуле строк и возвращает его, если его нет - создает
             if (params.length == 2) {
-                uuid = params[1].intern();
+                fullName = params[1].intern();
             }
             //  В свиче проверяю первое введённое слово и выполняю соответствующее действие
             switch (params[0]) {
@@ -41,21 +42,21 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    resume = new Resume(uuid);
+                    resume = new Resume(fullName);
                     ARRAY_STORAGE.save(resume);
                     printAll();
                     break;
                 case "update":
-                    resume = new Resume(uuid);
+                    resume = new Resume(fullName);
                     ARRAY_STORAGE.update(resume);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(uuid);
+                    ARRAY_STORAGE.delete(fullName);
                     printAll();
                     break;
                 case "get":
-                    resume = ARRAY_STORAGE.get(uuid);
+                    resume = ARRAY_STORAGE.get(fullName);
                     if (resume != null) {
                         System.out.println(resume);
                     }
@@ -74,13 +75,13 @@ public class MainArray {
     }
 
     static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.size() == 0) {
             System.out.println("Empty");
         } else {
             for (Resume r : all) {
-                System.out.println(r);
+                System.out.println("uuid: " + r.getUuid() + " - Full name: " + r.getFullName());
             }
         }
         System.out.println("----------------------------");

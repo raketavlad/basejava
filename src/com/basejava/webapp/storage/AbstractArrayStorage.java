@@ -3,7 +3,9 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Array based storage for Resumes
@@ -16,8 +18,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    protected List<Resume> getList() {
+        List<Resume> listResume = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            listResume.add(storage[i]);
+        }
+        return listResume;
     }
 
     @Override

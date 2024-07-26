@@ -2,17 +2,19 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
 
     private final LinkedHashMap<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
-    public Resume[] getAll() {
-        ArrayList<Resume> values = new ArrayList<>(storage.values());
-        return values.toArray(Resume[]::new);
+    protected List<Resume> getList() {
+        List<Resume> listResume = new ArrayList<>(storage.size());
+        for (String key : storage.keySet()) {
+            listResume.add(storage.get(key));
+        }
+        return listResume;
     }
 
     @Override
@@ -54,5 +56,4 @@ public class MapStorage extends AbstractStorage {
     protected boolean isExist(Object searchKey) {
         return storage.containsKey((String) searchKey);
     }
-
 }

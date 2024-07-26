@@ -2,17 +2,24 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ListStorage extends AbstractStorage {
+
+    private static class ResumeComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume resume1, Resume resume2) {
+            return resume1.getUuid().compareTo(resume2.getUuid());
+        }
+    }
+
+    private static final ResumeComparator RESUME_COMPARATOR = new ResumeComparator();
 
     private final List<Resume> storage = new LinkedList<>();
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(Resume[]::new);
+    protected List<Resume> getList() {
+        return storage;
     }
 
     @Override
@@ -51,8 +58,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Collections.binarySearch(storage, searchKey);
+        Resume searchKey = new Resume(uuid, "Random Name");
+        return Collections.binarySearch(storage, searchKey, RESUME_COMPARATOR);
     }
 
     @Override

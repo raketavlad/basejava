@@ -1,13 +1,10 @@
 package com.basejava.webapp.test;
 
-import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.SortedArrayStorage;
-import com.basejava.webapp.storage.Storage;
-
 /**
  * Test for your com.basejava.webapp.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
+    /*
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
@@ -47,4 +44,6 @@ public class MainTestArrayStorage {
             System.out.println(r);
         }
     }
+
+     */
 }
