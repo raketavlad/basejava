@@ -5,24 +5,18 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
+    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName).
+            thenComparing(Resume::getUuid);
+
     @Override
     public List<Resume> getAllSorted() {
-
         List<Resume> list = getList();
-        Collections.sort(list, (resume1, resume2) -> {
-            int number = resume1.getFullName().compareTo(resume2.getFullName());
-            if (number == 0) {
-                resume1.getUuid().compareTo(resume2.getUuid());
-            }
-            if (number < 0) {
-                return -1;
-            }
-            return 1;
-        });
+        Collections.sort(list, RESUME_COMPARATOR);
         return list;
     }
 
