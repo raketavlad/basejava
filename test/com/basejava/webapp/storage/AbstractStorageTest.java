@@ -88,7 +88,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllSorted() {
         List<Resume> testStorage = new ArrayList<>();
         testStorage.add(RESUME_1);
         testStorage.add(RESUME_2);

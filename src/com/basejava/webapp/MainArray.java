@@ -20,18 +20,18 @@ public class MainArray {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume resume;
         while (true) {
-            System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | update uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | size | save fullName | delete uuid | get uuid | update uuid fullName | clear | exit): ");
             // Возврат строки, убираются пробелы пробелы сзади и спереди, к нижнему регистру, разбивка на эелементы
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             // Проверка, что введена правильная длинна команд (от одного слова до двух)
-            if (params.length < 1 || params.length > 2) {
+            if (params.length < 1 || params.length > 3) {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String fullName = null;
+            String param = null;
             // Метод intern смотрит, есть ли введенный uuid в пуле строк и возвращает его, если его нет - создает
-            if (params.length == 2) {
-                fullName = params[1].intern();
+            if (params.length > 1) {
+                param = params[1].intern();
             }
             //  В свиче проверяю первое введённое слово и выполняю соответствующее действие
             switch (params[0]) {
@@ -42,21 +42,21 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    resume = new Resume(fullName);
+                    resume = new Resume(param);
                     ARRAY_STORAGE.save(resume);
                     printAll();
                     break;
                 case "update":
-                    resume = new Resume(fullName);
+                    resume = new Resume(param, params[2]);
                     ARRAY_STORAGE.update(resume);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(fullName);
+                    ARRAY_STORAGE.delete(param);
                     printAll();
                     break;
                 case "get":
-                    resume = ARRAY_STORAGE.get(fullName);
+                    resume = ARRAY_STORAGE.get(param);
                     if (resume != null) {
                         System.out.println(resume);
                     }
