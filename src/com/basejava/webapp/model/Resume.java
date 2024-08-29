@@ -1,7 +1,6 @@
 package com.basejava.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -10,6 +9,9 @@ public class Resume {
 
     private final String uuid;
     private final String fullName;
+
+    private final Map<ContactType, String> contacts = new LinkedHashMap<>();
+    private final Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -28,6 +30,34 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void addContact(ContactType contactType, String value) {
+        contacts.put(contactType, value);
+    }
+
+    public void updateContact(ContactType contactType, String newValue) {
+        contacts.replace(contactType, newValue);
+    }
+
+    public void printContacts() {
+        System.out.println("КОНТАКТЫ:");
+        for (ContactType contact : contacts.keySet()) {
+            System.out.println(contact.getTitle() + ": " + contacts.get(contact));
+        }
+        System.out.println();
+    }
+
+    public void addSection(SectionType sectionType, AbstractSection section) {
+        sections.put(sectionType, section);
+    }
+
+    public void printSections() {
+        for (SectionType sectionType : sections.keySet()) {
+            System.out.println(sectionType.getTitle().toUpperCase());
+            sections.get(sectionType).printContent();
+            System.out.println();
+        }
     }
 
     @Override
