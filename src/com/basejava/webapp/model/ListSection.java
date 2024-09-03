@@ -1,24 +1,36 @@
 package com.basejava.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListSection extends AbstractSection {
 
-    private List<String> content = new ArrayList<>();
+    private final List<String> items;
 
-    public void addContent(String text) {
-        content.add(text);
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "Items must not be null");
+        this.items = items;
     }
 
-    public List<String> getContent() {
-        return content;
+    public List<String> getItems() {
+        return items;
     }
 
     @Override
-    public void printContent() {
-        for (String text : content) {
-            System.out.println("- " + text);
-        }
+    public String toString() {
+        return items.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListSection that = (ListSection) o;
+        return items.equals(that.items);
+    }
+
+    public int hashCode() {
+        return items.hashCode();
     }
 }

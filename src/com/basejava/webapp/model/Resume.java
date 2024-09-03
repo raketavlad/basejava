@@ -9,9 +9,8 @@ public class Resume {
 
     private final String uuid;
     private final String fullName;
-
-    private final Map<ContactType, String> contacts = new LinkedHashMap<>();
-    private final Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -32,32 +31,25 @@ public class Resume {
         return fullName;
     }
 
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
     public void addContact(ContactType contactType, String value) {
         contacts.put(contactType, value);
-    }
-
-    public void updateContact(ContactType contactType, String newValue) {
-        contacts.replace(contactType, newValue);
-    }
-
-    public void printContacts() {
-        System.out.println("КОНТАКТЫ:");
-        for (ContactType contact : contacts.keySet()) {
-            System.out.println(contact.getTitle() + ": " + contacts.get(contact));
-        }
-        System.out.println();
     }
 
     public void addSection(SectionType sectionType, AbstractSection section) {
         sections.put(sectionType, section);
     }
 
-    public void printSections() {
-        for (SectionType sectionType : sections.keySet()) {
-            System.out.println(sectionType.getTitle().toUpperCase());
-            sections.get(sectionType).printContent();
-            System.out.println();
-        }
+    @Override
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override
@@ -76,10 +68,5 @@ public class Resume {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
     }
 }
