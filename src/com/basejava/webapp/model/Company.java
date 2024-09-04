@@ -1,5 +1,6 @@
 package com.basejava.webapp.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public class Company {
         this.homePage = new Link(name, url);
     }
 
-    public void addPeriod(String fromDate, String toDate, String title, String content) {
+    public void addPeriod(LocalDate fromDate, LocalDate toDate, String title, String content) {
         periods.add(new Period(fromDate, toDate, title, content));
     }
 
