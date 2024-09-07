@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
-    private File directory;
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "Directory must not be null");
@@ -27,8 +27,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getList() {
         List<Resume> listResume = new ArrayList<>();
-        for (File file : directory.listFiles()) {
-            Resume resume = doRead(file);
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Pathname does not denote a directory");
+        }
+        for (File file : files) {
+            Resume resume = doGet(file);
             listResume.add(resume);
         }
         return listResume;
@@ -65,7 +69,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        file.deleteOnExit();
+        if (!file.delete()) {
+            throw new StorageException("File not found", file.getName());
+        }
     }
 
     @Override
@@ -80,19 +86,27 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : Objects.requireNonNull(directory.listFiles())) {
-            file.delete();
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Pathname does not denote a directory");
         }
+        doDelete();
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.listFiles()).length;
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Pathname does not denote a directory");
+        }
+        return files.length;
     }
 
     protected abstract void doRewrite(Resume resume, File file) throws IOException;
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;
 
-    protected abstract Resume doRead(File file);
+    protected abstract Resume doRead(File file) throws StorageException;
+
+    protected abstract void doDelete();
 }
