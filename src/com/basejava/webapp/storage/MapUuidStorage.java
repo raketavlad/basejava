@@ -10,11 +10,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
 
     @Override
     protected List<Resume> getList() {
-        List<Resume> listResume = new ArrayList<>(storage.size());
-        for (String key : storage.keySet()) {
-            listResume.add(storage.get(key));
-        }
-        return listResume;
+        return Arrays.asList(storage.values().toArray(new Resume[0]));
     }
 
     @Override

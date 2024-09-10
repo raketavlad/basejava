@@ -23,7 +23,7 @@ public class Company {
         return "Company{" +
                 "homePage=" + homePage +
                 ", periods=" + periods +
-                '}';
+                "}";
     }
 
     @Override

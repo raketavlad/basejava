@@ -43,7 +43,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doRewrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't update file " + file.getAbsolutePath(), file.getName(), e);
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             file.createNewFile();
             doWrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
     }
 

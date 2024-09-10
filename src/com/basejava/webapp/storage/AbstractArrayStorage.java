@@ -38,9 +38,25 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
+    protected void doSave(Resume resume, Integer index) {
+        storageOverflow(resume);
+        insertElement(resume, index);
+        size++;
+    }
+
+
+    @Override
     protected Resume doGet(Integer searchKey) {
         return storage[searchKey];
     }
+
+    @Override
+    protected void doDelete(Integer index) {
+        fillDeletedElement(index);
+        storage[size - 1] = null;
+        size--;
+    }
+
 
     protected void storageOverflow(Resume resume) {
         if (size == STORAGE_LIMIT) {
@@ -52,4 +68,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected boolean isExist(Integer index) {
         return index >= 0;
     }
+
+    protected abstract void insertElement(Resume resume, Integer index);
+
+    protected abstract void fillDeletedElement(Integer index);
 }
