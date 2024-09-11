@@ -1,11 +1,14 @@
 package com.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Company {
+public class Company implements Serializable {
+
+    private static final long SERIAL_VERSION_UID = 1L;
 
     private final Link homePage;
     private List<Period> periods = new ArrayList<>();

@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class CompanySection extends AbstractSection {
 
+    private static final long SERIAL_VERSION_UID = 1L;
+
     private final List<Company> companies;
 
     public CompanySection(List<Company> companies) {

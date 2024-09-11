@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class TextSection extends AbstractSection {
 
+    private static final long SERIAL_VERSION_UID = 1L;
+
     private final String content;
 
     public TextSection(String content) {
