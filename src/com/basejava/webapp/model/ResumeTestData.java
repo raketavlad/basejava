@@ -69,12 +69,11 @@ public class ResumeTestData {
         Resume resumeTest = createResume("uuid1", "Rybalko V.A.");
     }
 
-
     public static Resume createResume(String uuid, String fullName) {
 
         // Заполнение контактов
         Resume resume = new Resume(uuid, fullName);
-        for (ContactType contactType: ContactType.values()) {
+        for (ContactType contactType : ContactType.values()) {
             resume.addContact(contactType, "Test");
         }
 
