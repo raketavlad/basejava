@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
@@ -30,15 +31,8 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> getList() {
         List<Resume> listResume = new ArrayList<>();
-        try {
-            for (Path path : Files.list(directory).toList()) {
-                Resume resume = doGet(path);
-                listResume.add(resume);
-            }
-            return listResume;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        createListFiles().toList().forEach(path -> listResume.add(doGet(path)));
+        return listResume;
     }
 
     @Override
@@ -82,17 +76,17 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        createListFiles().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
+        return (int) createListFiles().count();
+    }
+
+    public Stream<Path> createListFiles() {
         try {
-            return (int) Files.list(directory).count();
+            return Files.list(directory);
         } catch (IOException e) {
             throw new StorageException("Pathname does not denote a directory");
         }

@@ -27,15 +27,10 @@ public class FileStorage extends AbstractStorage<File> {
         this.saveAndReadStrategy = saveAndReadStrategy;
     }
 
-
     @Override
     protected List<Resume> getList() {
         List<Resume> listResume = new ArrayList<>();
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Pathname does not denote a directory");
-        }
-        for (File file : files) {
+        for (File file : createListFiles()) {
             Resume resume = doGet(file);
             listResume.add(resume);
         }
@@ -59,12 +54,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File file) {
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
-        }
-            return saveAndReadStrategy.read(file.getAbsolutePath());
+        return saveAndReadStrategy.read(file.getAbsolutePath());
     }
 
     @Override
@@ -86,21 +76,21 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Pathname does not denote a directory");
-        }
-        for (File file : files) {
+        for (File file : createListFiles()) {
             file.delete();
         }
     }
 
     @Override
     public int size() {
+        return createListFiles().length;
+    }
+
+    private File[] createListFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("Pathname does not denote a directory");
         }
-        return files.length;
+        return files;
     }
 }
