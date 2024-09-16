@@ -31,7 +31,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> getList() {
         List<Resume> listResume = new ArrayList<>();
-        createListFiles().toList().forEach(path -> listResume.add(doGet(path)));
+        getListFiles().map(this::doGet).forEach(listResume::add);
         return listResume;
     }
 
@@ -76,15 +76,15 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        createListFiles().forEach(this::doDelete);
+        getListFiles().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        return (int) createListFiles().count();
+        return (int) getListFiles().count();
     }
 
-    public Stream<Path> createListFiles() {
+    public Stream<Path> getListFiles() {
         try {
             return Files.list(directory);
         } catch (IOException e) {

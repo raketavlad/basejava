@@ -30,7 +30,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getList() {
         List<Resume> listResume = new ArrayList<>();
-        for (File file : createListFiles()) {
+        for (File file : getListFiles()) {
             Resume resume = doGet(file);
             listResume.add(resume);
         }
@@ -76,17 +76,17 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : createListFiles()) {
+        for (File file : getListFiles()) {
             file.delete();
         }
     }
 
     @Override
     public int size() {
-        return createListFiles().length;
+        return getListFiles().length;
     }
 
-    private File[] createListFiles() {
+    private File[] getListFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("Pathname does not denote a directory");
