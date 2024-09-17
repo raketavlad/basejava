@@ -42,7 +42,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new StorageException("Couldn't create path" + path, path.getFileName().toString(), e);
         }
         saveAndReadStrategy.save(resume, path.toString());
     }
@@ -57,7 +57,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new StorageException("Path not found", path.toString());
+            throw new StorageException("Path not found", path.toString(), e);
         }
     }
 
@@ -81,11 +81,11 @@ public class PathStorage extends AbstractStorage<Path> {
         return (int) getListFiles().count();
     }
 
-    public Stream<Path> getListFiles() {
+    private Stream<Path> getListFiles() {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Pathname does not denote a directory");
+            throw new StorageException("Pathname does not denote a directory", e);
         }
     }
 }
