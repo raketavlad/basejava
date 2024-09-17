@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -30,9 +29,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getList() {
-        List<Resume> listResume = new ArrayList<>();
-        getListFiles().map(this::doGet).forEach(listResume::add);
-        return listResume;
+        return getListFiles().map(this::doGet).toList();
     }
 
     @Override
