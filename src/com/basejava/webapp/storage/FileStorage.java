@@ -44,7 +44,11 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume resume, File file) {
-        saveAndReadStrategy.save(resume, file.toString());
+        try {
+            saveAndReadStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+        } catch (IOException e) {
+            throw new StorageException("File write error", resume.getUuid(), e);
+        }
     }
 
     @Override
@@ -54,17 +58,16 @@ public class FileStorage extends AbstractStorage<File> {
         } catch (IOException e) {
             throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
-        saveAndReadStrategy.save(resume, file.toString());
+        doUpdate(resume, file);
     }
 
     @Override
     protected Resume doGet(File file) {
         try {
-            file.createNewFile();
+            return saveAndReadStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
-            return saveAndReadStrategy.read(file.getAbsolutePath());
     }
 
     @Override

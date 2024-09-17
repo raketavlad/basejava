@@ -8,23 +8,18 @@ import java.io.*;
 public class ObjectStreamRealization implements SaveAndReadStrategy {
 
     @Override
-    public void save(Resume resume, String fileName) {
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream((fileName))));
+    public void doWrite(Resume resume, OutputStream os) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(resume);
-            oos.close();
         } catch (IOException e) {
             throw new StorageException("Write error! File not found!", null, e);
         }
     }
 
     @Override
-    public Resume read(String fileName) {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
-            Resume resume = (Resume) ois.readObject();
-            ois.close();
-            return resume;
+    public Resume doRead(InputStream is) {
+        try (ObjectInputStream ois = new ObjectInputStream(is)) {
+            return (Resume) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new StorageException("Read error!", null, e);
         }

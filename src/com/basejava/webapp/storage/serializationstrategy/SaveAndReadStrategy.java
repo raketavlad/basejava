@@ -2,9 +2,13 @@ package com.basejava.webapp.storage.serializationstrategy;
 
 import com.basejava.webapp.model.Resume;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public interface SaveAndReadStrategy {
 
-    void save(Resume resume, String fileName);
+    void doWrite(Resume resume, OutputStream os) throws IOException;
 
-    Resume read(String fileName);
+    Resume doRead(InputStream is) throws IOException;
 }

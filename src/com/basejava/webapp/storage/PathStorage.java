@@ -34,7 +34,11 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void doUpdate(Resume resume, Path path) {
-        saveAndReadStrategy.save(resume, path.toString());
+        try {
+            saveAndReadStrategy.doWrite(resume, Files.newOutputStream(path));
+        } catch (IOException e) {
+            throw new StorageException("Couldn't create path" + path, path.getFileName().toString(), e);
+        }
     }
 
     @Override
@@ -44,12 +48,16 @@ public class PathStorage extends AbstractStorage<Path> {
         } catch (IOException e) {
             throw new StorageException("Couldn't create path" + path, path.getFileName().toString(), e);
         }
-        saveAndReadStrategy.save(resume, path.toString());
+        doUpdate(resume, path);
     }
 
     @Override
     protected Resume doGet(Path path) {
-        return saveAndReadStrategy.read(path.toString());
+        try {
+            return saveAndReadStrategy.doRead(Files.newInputStream(path));
+        } catch (IOException e) {
+            throw new StorageException("Path read error", path.toString(), e);
+        }
     }
 
     @Override
