@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.serializationstrategy.SaveAndReadStrategy;
+import com.basejava.webapp.storage.serializationstrategy.StreamSerializer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,32 +10,33 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
-    private SaveAndReadStrategy saveAndReadStrategy;
+    private StreamSerializer streamSerializer;
 
-    protected PathStorage(String dir, SaveAndReadStrategy saveAndReadStrategy) {
+    protected PathStorage(String dir, StreamSerializer streamSerializer) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "Directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
-        Objects.requireNonNull(saveAndReadStrategy, "Save strategy must not be null");
-        this.saveAndReadStrategy = saveAndReadStrategy;
+        Objects.requireNonNull(streamSerializer, "Save strategy must not be null");
+        this.streamSerializer = streamSerializer;
     }
 
     @Override
     protected List<Resume> getList() {
-        return getListFiles().map(this::doGet).toList();
+        return getListFiles().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            saveAndReadStrategy.doWrite(resume, Files.newOutputStream(path));
+            streamSerializer.doWrite(resume, Files.newOutputStream(path));
         } catch (IOException e) {
             throw new StorageException("Couldn't create path" + path, path.getFileName().toString(), e);
         }
@@ -54,7 +55,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return saveAndReadStrategy.doRead(Files.newInputStream(path));
+            return streamSerializer.doRead(Files.newInputStream(path));
         } catch (IOException e) {
             throw new StorageException("Path read error", path.toString(), e);
         }

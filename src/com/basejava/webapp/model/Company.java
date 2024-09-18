@@ -1,17 +1,23 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
 
     private static final long SERIAL_VERSION_UID = 1L;
 
-    private final Link homePage;
+    private Link homePage;
     private List<Period> periods = new ArrayList<>();
+
+    public Company() {
+    }
 
     public Company(String name, String url) {
         this.homePage = new Link(name, url);

@@ -7,7 +7,10 @@ public class CompanySection extends AbstractSection {
 
     private static final long SERIAL_VERSION_UID = 1L;
 
-    private final List<Company> companies;
+    private List<Company> companies;
+
+    public CompanySection() {
+    }
 
     public CompanySection(List<Company> companies) {
         Objects.requireNonNull(companies, "Companies must not be null");

@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamRealization implements SaveAndReadStrategy {
+public class ObjectStreamSerializer implements StreamSerializer {
 
     @Override
     public void doWrite(Resume resume, OutputStream os) {

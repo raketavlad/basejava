@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.serializationstrategy.SaveAndReadStrategy;
+import com.basejava.webapp.storage.serializationstrategy.StreamSerializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import java.util.Objects;
 public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
-    private SaveAndReadStrategy saveAndReadStrategy;
+    private StreamSerializer streamSerializer;
 
-    protected FileStorage(File directory, SaveAndReadStrategy saveAndReadStrategy) {
+    protected FileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "Directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -23,8 +23,8 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        Objects.requireNonNull(saveAndReadStrategy, "Save strategy must not be null");
-        this.saveAndReadStrategy = saveAndReadStrategy;
+        Objects.requireNonNull(streamSerializer, "Save strategy must not be null");
+        this.streamSerializer = streamSerializer;
     }
 
 
@@ -45,7 +45,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            saveAndReadStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            streamSerializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File write error", resume.getUuid(), e);
         }
@@ -64,7 +64,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            return saveAndReadStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
