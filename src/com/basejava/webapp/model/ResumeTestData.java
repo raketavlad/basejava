@@ -78,10 +78,10 @@ public class ResumeTestData {
         }
 
         // Заполнение секции Личные качества
-        resume.addSection(SectionType.PERSONAL, new TextSection("personal"));
+        resume.addSection(SectionType.PERSONAL, new TextSection("personal data test"));
 
         // Заполнение секции Позиция
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("objective"));
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("objective data test"));
 
         //Заполнение секции Достижения
         List<String> achievement = new ArrayList<>();

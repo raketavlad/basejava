@@ -23,6 +23,14 @@ public class Company implements Serializable {
         this.homePage = new Link(name, url);
     }
 
+    public Link getLink() {
+        return homePage;
+    }
+
+    public List<Period> getPeriods() {
+        return periods;
+    }
+
     public void addPeriod(LocalDate fromDate, LocalDate toDate, String title, String content) {
         periods.add(new Period(fromDate, toDate, title, content));
     }
