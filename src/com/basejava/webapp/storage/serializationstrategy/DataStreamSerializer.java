@@ -6,7 +6,10 @@ import com.basejava.webapp.util.DateUtil;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamSerializer<E> implements StreamSerializer {
     @Override
@@ -64,39 +67,38 @@ public class DataStreamSerializer<E> implements StreamSerializer {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
             // Считывание контактов и добавление их в резюме
-            int countContacts = dis.readInt();
-            for (int i = 0; i < countContacts; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            readWithException(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
 
             // Считывание секций и добавление их в резюме
-            int countSections = dis.readInt();
-            for (int i = 0; i < countSections; i++) {
+            readWithException(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                if (sectionType == SectionType.PERSONAL || sectionType == SectionType.OBJECTIVE) {
-                    resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                } else if (sectionType == SectionType.QUALIFICATIONS || sectionType == SectionType.ACHIEVEMENT) {
-                    int countItems = dis.readInt();
-                    List<String> items = new ArrayList<>();
-                    for (int j = 0; j < countItems; j++) {
-                        items.add(dis.readUTF());
-                    }
-                    resume.addSection(sectionType, new ListSection(items));
-                } else {
-                    int countCompanies = dis.readInt();
-                    List<Company> companies = new ArrayList<>();
-                    for (int j = 0; j < countCompanies; j++) {
-                        Company company = new Company(dis.readUTF(), dis.readUTF());
-                        int countPeriods = dis.readInt();
-                        for (int k = 0; k < countPeriods; k++) {
-                            company.addPeriod(getLocalDate(dis.readUTF()), getLocalDate(dis.readUTF()),
-                                    dis.readUTF(), dis.readUTF());
-                        }
-                        companies.add(company);
-                    }
-                    resume.addSection(sectionType, new CompanySection(companies));
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSection(sectionType, new TextSection((dis.readUTF())));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        List<String> items = new ArrayList<>();
+                        readWithException(dis, () -> items.add(dis.readUTF()));
+                        resume.addSection(sectionType, new ListSection(items));
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        List<Company> companies = new ArrayList<>();
+                        readWithException(dis, () -> {
+                            Company company = new Company(dis.readUTF(), dis.readUTF());
+                            readWithException(dis, () -> {
+                                company.addPeriod(getLocalDate(dis.readUTF()), getLocalDate(dis.readUTF()),
+                                        dis.readUTF(), dis.readUTF());
+                            });
+                            companies.add(company);
+                        });
+                        resume.addSection(sectionType, new CompanySection(companies));
+                        break;
                 }
-            }
+            });
             return resume;
         }
     }
@@ -107,16 +109,29 @@ public class DataStreamSerializer<E> implements StreamSerializer {
     }
 
     private <W> void writeWithException(Collection<W> collection, DataOutputStream dos,
-                                        CustomConsumer<W> cc) throws IOException {
+                                        DataWriting<W> dw) throws IOException {
         dos.writeInt(collection.size());
         for (W element : collection) {
-            cc.accept(element);
+            dw.writeElements(element);
+        }
+    }
+
+    private void readWithException(DataInputStream dis,
+                                   DataReading dr) throws IOException {
+        int countElements = dis.readInt();
+        for (int i = 0; i < countElements; i++) {
+            dr.readElements();
         }
     }
 
     @FunctionalInterface
-    public interface CustomConsumer<T> {
-        void accept(T t) throws IOException;
+    public interface DataWriting<T> {
+        void writeElements(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    public interface DataReading {
+        void readElements() throws IOException;
     }
 }
 
