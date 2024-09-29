@@ -116,8 +116,7 @@ public class DataStreamSerializer<E> implements StreamSerializer {
         }
     }
 
-    private void readWithException(DataInputStream dis,
-                                   DataReading dr) throws IOException {
+    private void readWithException(DataInputStream dis, DataReading dr) throws IOException {
         int countElements = dis.readInt();
         for (int i = 0; i < countElements; i++) {
             dr.readElements();
