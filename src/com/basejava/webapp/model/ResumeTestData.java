@@ -73,7 +73,7 @@ public class ResumeTestData {
 
         // Заполнение контактов
         Resume resume = new Resume(uuid, fullName);
-        /*
+/*
         for (ContactType contactType : ContactType.values()) {
             resume.addContact(contactType, "Test");
         }

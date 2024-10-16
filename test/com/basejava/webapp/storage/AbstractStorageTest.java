@@ -10,8 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class AbstractStorageTest {
 
@@ -21,13 +20,13 @@ public abstract class AbstractStorageTest {
 
     protected final Storage storage;
 
-    public static final String UUID_1 = "uuid1";
+    public static final String UUID_1 = UUID.randomUUID().toString();
     public static final String FULLNAME_1 = "First Resume";
-    public static final String UUID_2 = "uuid2";
+    public static final String UUID_2 = UUID.randomUUID().toString();
     public static final String FULLNAME_2 = "Second Resume";
-    public static final String UUID_3 = "uuid3";
+    public static final String UUID_3 = UUID.randomUUID().toString();
     public static final String FULLNAME_3 = "Third Resume";
-    public static final String UUID_4 = "uuid4";
+    public static final String UUID_4 = UUID.randomUUID().toString();
     public static final String FULLNAME_4 = "Fourth Resume";
     public static final String TEST_UUID = "dummy";
 
@@ -96,11 +95,16 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> testStorage = new ArrayList<>();
-        testStorage.add(RESUME_1);
-        testStorage.add(RESUME_2);
-        testStorage.add(RESUME_3);
-        Assertions.assertArrayEquals(testStorage.toArray(), storage.getAllSorted().toArray());
+        List<Resume> testStorage = storage.getAllSorted();
+        Assertions.assertEquals(3, testStorage.size());
+        List<Resume> sortedResumes = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(sortedResumes);
+        Assertions.assertEquals(testStorage, sortedResumes);
+
+//        testStorage.add(RESUME_1);
+//        testStorage.add(RESUME_2);
+//        testStorage.add(RESUME_3);
+//        Assertions.assertArrayEquals(testStorage.toArray(), storage.getAllSorted().toArray());
     }
 
     @Test
